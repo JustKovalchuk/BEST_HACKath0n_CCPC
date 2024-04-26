@@ -3,13 +3,14 @@ using Hackaton.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Hackaton.Models.Validation;
+using Hackaton.Validation.User;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Hackaton.Data;
 using Hackaton.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Hackaton.Controllers
 {
@@ -18,14 +19,14 @@ namespace Hackaton.Controllers
         public readonly ILogger<HomeController> _logger;
         public readonly IApplicationDbContext _db;
         public readonly IUserService _userService;
-        //private readonly UserSignUpValidation _validator;
+        private readonly UserSignUpValidation _validator;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService, IApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, IUserService userService, IApplicationDbContext db, UserSignUpValidation validator)
         {
             _logger = logger;
             _userService = userService;
             _db = db;
-            //_validator = validator;
+            _validator = validator;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -61,30 +62,24 @@ namespace Hackaton.Controllers
         [ValidateAntiForgeryToken] // Add AntiForgeryToken validation
         public async Task<IActionResult> SignUpHelper(UserData model)
         {
-            _logger.LogInformation($"SignUpHelper");
-            if (ModelState.IsValid)
+            var validationResult = model.Validator.Validate(model); // Використовуємо вбудований валідатор
+            if (validationResult.IsValid)
             {
-                // Process user registration here
-                // For now, just redirect to the home page
-                _logger.LogInformation($"User : {model.Name}, Surname: {model.Surname}, Email: {model.Email}, Age: {model.Age}, Password: {model.Password},Copy Password: {model.CopyPassword}");
+                _logger.LogInformation(model.ToString());
 
-                var newUserData = new UserData
-                {
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    Email = model.Email,
-                    Age = model.Age,
-                    Password = model.Password,
-                    CopyPassword = model.CopyPassword,
-                    Role = "Helper"
-                };
-                var id = await _db.UserData.AddAsync(newUserData);
-                await _db.SaveChangesAsync();
-                //var id = await _userService.InsertAsync(newUserData);
-                //_logger.LogInformation("success");
+                model.Role = "Helper";
+                var id = await _userService.InsertAsync(model);
+                _logger.LogInformation("success");
                 return RedirectToAction("Index", "Home");
             }
-            return View(model);
+            else
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(model);
+            }
         }
 
         public IActionResult Index()

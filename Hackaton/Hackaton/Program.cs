@@ -1,16 +1,17 @@
-using Hackaton.Models.Validation;
 using Hackaton.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 using Hackaton.Services;
 using Hackaton.Models.User;
+using Hackaton.Validation;
+using Hackaton.Validation.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddTransient<UserSignUpValidation>();
 builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
 {
     var conString = builder.Configuration.GetConnectionString("Default");
