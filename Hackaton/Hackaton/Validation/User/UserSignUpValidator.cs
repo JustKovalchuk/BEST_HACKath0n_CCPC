@@ -3,9 +3,9 @@ using Hackaton.Models.User;
 
 namespace Hackaton.Validation.User
 {
-    public class UserSignUpValidation : AbstractValidator<UserData>
+    public class UserSignUpValidator : AbstractValidator<UserData>
     {
-        public UserSignUpValidation()
+        public UserSignUpValidator()
         {
             RuleFor(r => r.Name).NotEmpty();
             RuleFor(r => r.Surname).NotEmpty();

@@ -1,5 +1,6 @@
 ﻿using Hackaton.Models.User;
 using Hackaton.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hackaton.Services
 {
@@ -18,6 +19,15 @@ namespace Hackaton.Services
             await _applicationDbContext.SaveChangesAsync();
 
             return userData.Id;
+        }
+        public async Task<bool> IsUserExistsAsync(string email)
+        {
+            return await _applicationDbContext.UserData.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> IsValidPasswordAsync(string email, string password)
+        {
+            return await _applicationDbContext.UserData.AnyAsync(u => u.Email == email && u.Password == password);
         }
     }
 }
