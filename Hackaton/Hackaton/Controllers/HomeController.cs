@@ -1,16 +1,7 @@
 using Hackaton.Models;
-using Hackaton.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Hackaton.Validation.User;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Hackaton.Data;
-using Hackaton.Services;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace Hackaton.Controllers
 {

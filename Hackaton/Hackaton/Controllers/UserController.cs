@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using MySqlX.XDevAPI.Common;
 
 
 namespace Hackaton.Controllers
@@ -141,13 +142,15 @@ namespace Hackaton.Controllers
                 return View(model);
             }
         }
-        [Authorize]
+
+        [HttpGet]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("/User/Logout")]
         public async Task<IActionResult> LogOut()
         {
+            _logger.LogInformation($"Logout!");
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
