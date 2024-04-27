@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Hackaton.Models.User;
 using Hackaton.Validation.User;
+using Hackaton.Data.Enums;
 using System.ComponentModel.DataAnnotations;
-
+ 
 namespace Hackaton.Models.User
-{
+{  
     public class UserData
     {
         public int Id { get; set; }
@@ -14,7 +15,7 @@ namespace Hackaton.Models.User
         public int Age { get; set; }
         public string Password { get; set; } = string.Empty;
         public string CopyPassword { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
+        public Roles Role { get; set; }
 
         public override string ToString()
         {

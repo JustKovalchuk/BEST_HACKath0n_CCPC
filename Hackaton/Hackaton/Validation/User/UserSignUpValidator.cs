@@ -16,6 +16,8 @@ namespace Hackaton.Validation.User
 
             RuleFor(r => r.Password).NotEmpty().MinimumLength(6);
             RuleFor(r => r.CopyPassword).NotEmpty().MinimumLength(6).Equal(r => r.Password);
+            RuleFor(r => r.Role).NotEmpty();
+
         }
     }
 }

@@ -48,6 +48,7 @@ namespace Hackaton.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp(UserData model)
         {
+            _logger.LogInformation(model.Role.ToString());
             var validationResult = _signUpValidator.Validate(model);
 
             if (validationResult.IsValid)
@@ -60,7 +61,6 @@ namespace Hackaton.Controllers
                     return View(model);
                 }
 
-                model.Role = "Helper";
                 var id = await _userService.InsertAsync(model);
 
                 return RedirectToAction("Index", "Home");
