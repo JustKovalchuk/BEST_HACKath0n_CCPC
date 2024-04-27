@@ -17,6 +17,8 @@ namespace Hackaton.Models.User
         public string CopyPassword { get; set; } = string.Empty;
         public Roles Role { get; set; }
 
+        public virtual ICollection<Message> Messages {get; set;}
+
         public override string ToString()
         {
             return $"User : {this.Name}, Surname: {this.Surname}, Email: {this.Email}, Age: {this.Age}, Password: {this.Password},Copy Password: {this.CopyPassword}";

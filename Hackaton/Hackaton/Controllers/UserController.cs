@@ -52,6 +52,7 @@ namespace Hackaton.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
+        //[Route("Chat/{Id}")]
         public IActionResult Chat()
         {
             var user = HttpContext.User.Identity.IsAuthenticated;
