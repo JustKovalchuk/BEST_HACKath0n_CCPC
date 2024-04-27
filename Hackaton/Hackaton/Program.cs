@@ -4,6 +4,7 @@ using Hackaton.Services;
 using Hackaton.Validation.User;
 using Hackaton.Models.User;
 using Microsoft.AspNetCore.Identity;
+using Hackaton.Hubs;
 
 
 var server = Environment.GetEnvironmentVariable("SERVER");
@@ -32,7 +33,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<UserSignUpValidator>();
 builder.Services.AddTransient<UserLoginValidator>();
-
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
 {
     try
@@ -75,5 +76,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

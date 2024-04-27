@@ -50,6 +50,17 @@ namespace Hackaton.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Chat()
+        {
+            var user = HttpContext.User.Identity.IsAuthenticated;
+            if (user == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
 
         [AllowAnonymous]
         [HttpPost]
