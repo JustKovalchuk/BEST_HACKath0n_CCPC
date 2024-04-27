@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Hackaton.Models.Categories;
 using Hackaton.Models.Product;
+using Hackaton.Models.Chats;
 using Hackaton.Models;
 
 

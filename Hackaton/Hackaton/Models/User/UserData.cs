@@ -2,6 +2,7 @@
 using Hackaton.Models.User;
 using Hackaton.Validation.User;
 using Hackaton.Data.Enums;
+using Hackaton.Models.Chats;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 

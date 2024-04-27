@@ -1,6 +1,7 @@
 using Hackaton.Data;
 using Hackaton.Hubs;
 using Hackaton.Models;
+using Hackaton.Models.Chats;
 using Hackaton.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
