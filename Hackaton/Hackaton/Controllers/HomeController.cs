@@ -23,6 +23,8 @@ namespace Hackaton.Controllers
             _logger = logger;
         }
 
+        [Authorize]
+        public IActionResult Create() => View();
         public IActionResult Index() => View();
         public IActionResult Privacy() => View();
 

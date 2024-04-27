@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Hackaton.Models.User;
 using Hackaton.Validation.User;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hackaton.Models.User

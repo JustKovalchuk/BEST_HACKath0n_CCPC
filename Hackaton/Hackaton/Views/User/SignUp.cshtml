@@ -52,9 +52,6 @@
                 @Html.DropDownListFor(model => model.Role, Enum.GetValues(typeof(Roles)).Cast<Roles>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }), "Select Role", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
             </div>
-            
-            
-
         </div>
 
 

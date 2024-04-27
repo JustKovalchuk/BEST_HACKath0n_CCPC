@@ -1,10 +1,9 @@
 using Hackaton.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 using Hackaton.Services;
-using Hackaton.Models.User;
-using Hackaton.Validation;
 using Hackaton.Validation.User;
+using Hackaton.Models.User;
+using Microsoft.AspNetCore.Identity;
 
 
 var server = Environment.GetEnvironmentVariable("SERVER");
@@ -16,9 +15,20 @@ var database = Environment.GetEnvironmentVariable("DATABASE");
 var conString = $"Server={server},{port};user={user};password={password};database={database}; CharSet=utf8;Persist Security Info=True";
 
 var builder = WebApplication.CreateBuilder(args);
+conString = builder.Configuration.GetConnectionString("Default");
 
-// Add services to the container.
+builder.Services.AddAuthentication()
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/User/LogIn/";
+        options.AccessDeniedPath = "/User/SignUp/";
+        options.LogoutPath = "/Home/";
+    });
+
+builder.Services.AddAuthorizationBuilder();
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<UserSignUpValidator>();
 builder.Services.AddTransient<UserLoginValidator>();
@@ -36,9 +46,13 @@ builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(optio
         throw new NotImplementedException("Can`t connect to db!");
     }
 });
+
+builder.Services.AddIdentityCore<UserData>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddApiEndpoints();
+
 Console.WriteLine("Connected to db successfully!");
 
-builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -53,11 +67,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();

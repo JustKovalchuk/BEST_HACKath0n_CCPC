@@ -4,13 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Hackaton.Validation.User;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Hackaton.Data;
 using Hackaton.Services;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+
 
 namespace Hackaton.Controllers
 {
@@ -22,13 +25,17 @@ namespace Hackaton.Controllers
         private readonly UserSignUpValidator _signUpValidator;
         private readonly UserLoginValidator _logInValidator;
 
-        public UserController(ILogger<UserController> logger, IUserService userService, IApplicationDbContext db, UserSignUpValidator signUpValidator, UserLoginValidator logInValidator)
+        private readonly UserManager<UserData> _userManager;
+
+        public UserController(ILogger<UserController> logger, IUserService userService, IApplicationDbContext db, UserSignUpValidator signUpValidator, UserLoginValidator logInValidator, UserManager<UserData> userManager)
         {
             _logger = logger;
             _userService = userService;
             _db = db;
             _signUpValidator = signUpValidator;
             _logInValidator = logInValidator;
+
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -48,21 +55,27 @@ namespace Hackaton.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUp(UserData model)
         {
-            _logger.LogInformation(model.Role.ToString());
             var validationResult = _signUpValidator.Validate(model);
 
+            _logger.LogInformation($"validationResult {validationResult}");
             if (validationResult.IsValid)
             {
-                var is_user_exists = await _userService.IsUserExistsAsync(model.Email);
-
-                if (is_user_exists)
+                var userExists = await _userManager.FindByEmailAsync(model.Email);
+                if (userExists != null)
                 {
                     _logger.LogInformation("Email already exists! Try LogIn or use another email!");
-                    return View(model);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
 
-                var id = await _userService.InsertAsync(model);
+                model.UserName = model.Email;
 
+                var result = await _userManager.CreateAsync(model, model.Password);
+                if (!result.Succeeded)
+                {
+                    _logger.LogInformation($"!result.Succeeded {result.ToString()}");
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+                _logger.LogInformation("result.Succeeded");
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -92,28 +105,31 @@ namespace Hackaton.Controllers
         public async Task<IActionResult> LogIn(LogInData model)
         {
             var validationResult = _logInValidator.Validate(model);
+
             if (validationResult.IsValid)
             {
-                var is_exists = await _userService.IsUserExistsAsync(model.Email);
-                if (!is_exists)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
                 {
                     _logger.LogInformation("No such user! (LogIn User)");
-                    return View(model);
+                    return Unauthorized();
                 }
-                else
+                var is_valid_password = await _userManager.CheckPasswordAsync(user, model.Password);
+                if (!is_valid_password)
                 {
-                    var is_valid_password = await _userService.IsValidPasswordAsync(model.Email, model.Password);
-                    if (!is_valid_password)
-                    {
-                        _logger.LogInformation("Wrong password! (LogIn User)");
-                        return View(model);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Success Login! (LogIn User)");
-                    }
+                    _logger.LogInformation("Wrong password! (LogIn User)");
+                    return Unauthorized();
                 }
 
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, model.Email)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                _logger.LogInformation("Success Login! (LogIn User)");
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -125,16 +141,14 @@ namespace Hackaton.Controllers
                 return View(model);
             }
         }
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
