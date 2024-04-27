@@ -6,6 +6,15 @@ using Hackaton.Models.User;
 using Hackaton.Validation;
 using Hackaton.Validation.User;
 
+
+var server = Environment.GetEnvironmentVariable("SERVER");
+var port = Environment.GetEnvironmentVariable("PORT");
+var user = Environment.GetEnvironmentVariable("USER");
+var password = Environment.GetEnvironmentVariable("PASSWORD");
+var database = Environment.GetEnvironmentVariable("DATABASE");
+
+var conString = $"Server={server},{port};user={user};password={password};database={database}; CharSet=utf8;Persist Security Info=True";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,27 +25,22 @@ builder.Services.AddTransient<UserLoginValidator>();
 
 builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
 {
-    var conString = builder.Configuration.GetConnectionString("Default");
-    options.UseMySql(conString, ServerVersion.AutoDetect(conString));
+    try
+    {
+        options.UseMySql(conString, ServerVersion.AutoDetect(conString));
+    }
+    catch
+    {
+        Console.WriteLine("Can`t connect to db!");
+        Console.WriteLine("Connnection string is not valid: \n" + conString);
+        throw new NotImplementedException("Can`t connect to db!");
+    }
 });
+Console.WriteLine("Connected to db successfully!");
 
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetService<IApplicationDbContext>();
-
-    if (!dbContext.Database.CanConnect())
-    {
-        throw new NotImplementedException("Can`t connect to db!");
-    }
-    else
-    {
-        Console.WriteLine("Connected to db successfully!");
-    }
-}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
