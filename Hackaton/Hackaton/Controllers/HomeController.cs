@@ -28,6 +28,7 @@ namespace Hackaton.Controllers
             _db = db;
             _validator = validator;
         }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult SignUpHelper()
@@ -40,36 +41,18 @@ namespace Hackaton.Controllers
             return View();
         }
 
-        //[AllowAnonymous]
-        //[HttpPost] // Handle POST requests
-        //[ValidateAntiForgeryToken] // Add AntiForgeryToken validation
-        //public async Task<IActionResult> SignUp(UserData model)
-        //{
-        //    var validationResult = _validator.Validate(model);
-        //    if (validationResult.IsValid)
-        //    {
-        //        _logger.LogInformation($"User : {model.name}, Surname: {model.surname}, Email: {model.email}, Age: {model.age}, Password: {model.password},Copy Password: {model.copyPassword}");
-
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    else
-        //    {
-        //        return View(model);
-        //    }
-        //}
         [AllowAnonymous]
-        [HttpPost] // Handle POST requests
-        [ValidateAntiForgeryToken] // Add AntiForgeryToken validation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignUpHelper(UserData model)
         {
-            var validationResult = model.Validator.Validate(model); // Використовуємо вбудований валідатор
+            var validationResult = _validator.Validate(model);
+
             if (validationResult.IsValid)
             {
-                _logger.LogInformation(model.ToString());
-
                 model.Role = "Helper";
                 var id = await _userService.InsertAsync(model);
-                _logger.LogInformation("success");
+
                 return RedirectToAction("Index", "Home");
             }
             else
