@@ -1,7 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@*     ViewData["Title"] = "Home Page"; *@
 
 <div class="text-center">
     <h1 class="display-4">Welcome (Home)</h1>
-</div>
+    <a href="@Url.Action("Chat", "Chat", new {firstItem=1})" class="btn btn-primary">Chat</a>
+</div> 

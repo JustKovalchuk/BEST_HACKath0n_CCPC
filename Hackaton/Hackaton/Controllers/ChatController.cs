@@ -35,11 +35,7 @@ namespace Hackaton.Controllers
         //[Route("/Chat/{Id}")]
         public IActionResult Chat()
         {
-            var user = HttpContext.User.Identity.IsAuthenticated;
-            if (user == true)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            
             return View();
         }
 
@@ -54,7 +50,7 @@ namespace Hackaton.Controllers
         public async Task<IActionResult> CreateMessage(Message msg)
         {
             msg.When = DateTime.Now;
-            
+
             _logger.LogInformation($"post CreateMessage {User.FindFirst(ClaimTypes.Email).Value} {User.Identity.IsAuthenticated}");
             var sender = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.Email).Value);
             msg.Sender = sender;

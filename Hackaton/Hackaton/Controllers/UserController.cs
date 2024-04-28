@@ -14,6 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using MySqlX.XDevAPI.Common;
+using Hackaton.Validation;
 
 
 namespace Hackaton.Controllers
@@ -42,18 +43,6 @@ namespace Hackaton.Controllers
         [AllowAnonymous]
         [HttpGet]
         public IActionResult SignUp()
-        {
-            var user = HttpContext.User.Identity.IsAuthenticated;
-            if (user == true)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-        [AllowAnonymous]
-        [HttpGet]
-        //[Route("Chat/{Id}")]
-        public IActionResult Chat()
         {
             var user = HttpContext.User.Identity.IsAuthenticated;
             if (user == true)
@@ -100,7 +89,7 @@ namespace Hackaton.Controllers
                 return View(model);
             }
         }
-        
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult LogIn()
