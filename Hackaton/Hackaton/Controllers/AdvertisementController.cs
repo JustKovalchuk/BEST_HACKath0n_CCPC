@@ -25,8 +25,8 @@ public class AdvertisementController : Controller
             return false;
         }
 
-        var userId = user.Id;
-        return await _context.UserRoles.AnyAsync(ur => ur.UserId == Int32.Parse((int)userId) && ur.RoleId == roleId.ToString());
+        var userId = user.Id.ToString();
+        return await _context.UserRoles.AnyAsync(ur => ur.UserId == userId && ur.RoleId == roleId.ToString());
     }
 
     public async Task<IActionResult> Index()
