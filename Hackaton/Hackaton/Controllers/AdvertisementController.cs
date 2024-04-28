@@ -7,6 +7,7 @@ using Hackaton.Models;
 using Hackaton.Models.Advertisement;
 using Hackaton.Models.User;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 public class AdvertisementController : Controller
 {
@@ -34,13 +35,14 @@ public class AdvertisementController : Controller
         var advertisements = await _context.AdvertisementData.ToListAsync();
         return View(advertisements);
     }
-
+    [AllowAnonymous]
+    [HttpGet]
     public async Task<IActionResult> Create()
     {
-        if (!await UserHasRole(1) && !await UserHasRole(2))
-        {
-            return Unauthorized();
-        }
+        //if (!await UserHasRole(1) && !await UserHasRole(2))
+        //{
+        //    return Unauthorized();
+        //}
 
         return View();
     }
