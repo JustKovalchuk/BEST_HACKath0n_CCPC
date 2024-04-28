@@ -1,34 +1,44 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Hackaton.Models.Chats;
+using Hackaton.Models.User;
+using Microsoft.AspNetCore.SignalR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hackaton.Hubs
 {
     public class ChatHub : Hub
     {
-        //public async Task SendMessage(string user, string message)
-        //{
-        //    Clients.All.SendAsync("ReceiveMessage", user, message);
-        //}
-        
-        public async Task SendMessage(string user, string message, string receiver)
+        public async Task SendMessage(string user, string message, string chatid, string userid)
         {
-            // Формуємо назву групи на основі імені користувача і отримувача
-            string groupName = $"{Context.User.Identity.Name}-{receiver}";
+            var chat = new Chat() { Id = Convert.ToInt32(chatid) };
 
-            // Відправляємо повідомлення тільки учасникам цієї групи
-            await Clients.Group(groupName).SendAsync("ReceiveMessage", user, message);
+            Console.WriteLine("SendMessage(string user, string message, string chatid, string userid)");
+            var msg = new Message() { Username = user, Text = message};
+            //await JoinChat(chatid);
+            await SendMessageToChat(chat, msg);
+
         }
 
-        public async Task JoinChat(string receiver)
+        public async Task SendMessageToChat(Chat chat, Message msg)
         {
-            // Приєднуємо користувача до групи чату
-            string groupName = $"{Context.User.Identity.Name}-{receiver}";
+            Console.WriteLine("SendMessage(Chat chat, Message msg)");
+            // Формуємо назву групи на основі імені користувача і отримувача
+            string groupName = $"{chat.Id}";
+
+            // Відправляємо повідомлення тільки учасникам цієї групи
+            await Clients.Group(groupName).SendAsync("ReceiveMessage", msg.Username, msg.Text);
+        }
+
+        public async Task JoinChat(string chatid)
+        {
+            Console.WriteLine($"JoinChat {chatid}");
+            string groupName = $"{chatid}";
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
-        public async Task LeaveChat(string receiver)
+        public async Task LeaveChat(string chatid)
         {
-            // Покидаємо користувача з групи чату
-            string groupName = $"{Context.User.Identity.Name}-{receiver}";
+            Console.WriteLine($"LeaveChat {chatid}");
+            string groupName = $"{chatid}";
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
     }

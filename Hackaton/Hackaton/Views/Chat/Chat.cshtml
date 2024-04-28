@@ -1,6 +1,13 @@
-﻿@page
-
-<div class="container">
+﻿<div class="container">
+    <script>
+        window.onload = function () {
+            connection.invoke("JoinChat", "1235423");
+            console.log("load");
+            window.addEventListener('beforeunload', function (event) {
+                connection.invoke("LeaveChat", "1235423");
+                console.log("unload");
+        };
+    </script>
     <div class="row p-1">
         <div class="col-1">User</div>
         <div class="col-5"><input type="text" id="userInput" /></div>
@@ -11,7 +18,7 @@
     </div>
     <div class="row p-1">
         <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
+            <input type="button" id="sendButtonMain" value="Send Message" />
         </div>
     </div>
     <div class="row p-1">

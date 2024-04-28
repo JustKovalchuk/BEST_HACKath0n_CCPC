@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Hackaton.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-
 var server = Environment.GetEnvironmentVariable("SERVER");
 var port = Environment.GetEnvironmentVariable("PORT");
 var user = Environment.GetEnvironmentVariable("USER");
@@ -36,8 +35,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<UserSignUpValidator>();
 builder.Services.AddTransient<UserLoginValidator>();
 builder.Services.AddTransient<MessageValidator>();
-builder.Services.AddTransient<ChatHub>();
 builder.Services.AddSignalR();
+builder.Services.AddTransient<ChatHub>();
 builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
 {
     try
@@ -81,6 +80,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-// app.AddSignalR();
 app.MapHub<ChatHub>("/chatHub");
 app.Run();
