@@ -1,0 +1,28 @@
+﻿@using Hackaton.Models.Advertisement
+@model List<Hackaton.Models.Advertisement.AdvertisementData>
+
+<h1>Список оголошень</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var advertisement in Model)
+        {
+            <tr>
+                <td>@advertisement.Name</td>
+                <td>@advertisement.Description</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Advertisement", new { id = advertisement.Id })" class="btn btn-primary">Редагувати</a>
+                    <a href="@Url.Action("Details", "Advertisement", new { id = advertisement.Id })" class="btn btn-info">Деталі</a>
+                    <a href="@Url.Action("Delete", "Advertisement", new { id = advertisement.Id })" class="btn btn-danger">Видалити</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

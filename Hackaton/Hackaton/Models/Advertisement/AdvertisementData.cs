@@ -1,12 +1,12 @@
 ﻿using Hackaton.Data.Enums;
 
-namespace Hackaton.Models.Product
+namespace Hackaton.Models.Advertisement
 {
-    public class ProductData
+    public class AdvertisementData
     {
         public int Id { get; set; }
 
-        public string Author { get; set; } = string.Empty;
+        public string UserId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
