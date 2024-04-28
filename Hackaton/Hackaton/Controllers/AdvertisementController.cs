@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackaton.Data;
-using Hackaton.Models;
 using Hackaton.Models.Advertisement;
-using Hackaton.Models.User;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 public class AdvertisementController : Controller
@@ -18,32 +15,18 @@ public class AdvertisementController : Controller
         _context = context;
     }
 
-    private async Task<bool> UserHasRole(int roleId)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-        if (user == null)
-        {
-            return false;
-        }
-
-        var userId = user.Id.ToString();
-        return await _context.UserRoles.AnyAsync(ur => ur.UserId == (userId) && ur.RoleId == roleId.ToString());
-    }
-
-    public async Task<IActionResult> Index()
-    {
-        var advertisements = await _context.AdvertisementData.ToListAsync();
-        return View(advertisements);
-    }
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public IActionResult Index()
     {
-        //if (!await UserHasRole(1) && !await UserHasRole(2))
-        //{
-        //    return Unauthorized();
-        //}
+        var advertisements = _context.AdvertisementData.ToList();
+        return View(advertisements);
+    }
 
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Create()
+    {
         return View();
     }
 
@@ -51,44 +34,88 @@ public class AdvertisementController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(AdvertisementData model)
     {
-        if (!await UserHasRole(1) && !await UserHasRole(2)) 
-        {
-            return Unauthorized();
-        }
-
         if (ModelState.IsValid)
         {
-            var advertisement = new AdvertisementData
-            {
-                Name = model.Name,
-                Description = model.Description,
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            };
-
-            _context.Add(advertisement);
+            _context.AdvertisementData.Add(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
         return View(model);
     }
 
-    [HttpPost, ActionName("Delete")]
+    [AllowAnonymous]
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        if (!await UserHasRole(1) && !await UserHasRole(2))
-        {
-            return Unauthorized();
-        }
-
         var advertisement = await _context.AdvertisementData.FindAsync(id);
-        _context.AdvertisementData.Remove(advertisement);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        if (advertisement != null)
+        {
+            _context.AdvertisementData.Remove(advertisement);
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction("Index");
     }
+
 
     private bool AdvertisementExists(int id)
     {
         return _context.AdvertisementData.Any(e => e.Id == id);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var advertisement = await _context.AdvertisementData.FindAsync(id);
+        if (advertisement == null)
+        {
+            return NotFound();
+        }
+        return View(advertisement);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var advertisement = await _context.AdvertisementData.FindAsync(id);
+        if (advertisement == null)
+        {
+            return NotFound();
+        }
+        return View(advertisement);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, AdvertisementData model)
+    {
+        if (id != model.Id)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _context.Update(model);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AdvertisementExists(model.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index");
+        }
+        return View(model);
     }
 }
