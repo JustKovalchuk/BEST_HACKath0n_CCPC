@@ -26,5 +26,6 @@ namespace Hackaton.Data
         public DbSet<Category> Category { get; set; }
         public DbSet<ProductData> ProductData { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Chat> Chats { get; set; }
     }
 }

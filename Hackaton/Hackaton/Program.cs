@@ -1,6 +1,7 @@
 using Hackaton.Data;
 using Microsoft.EntityFrameworkCore;
 using Hackaton.Services;
+using Hackaton.Validation;
 using Hackaton.Validation.User;
 using Hackaton.Models.User;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +35,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<UserSignUpValidator>();
 builder.Services.AddTransient<UserLoginValidator>();
+builder.Services.AddTransient<MessageValidator>();
 builder.Services.AddTransient<ChatHub>();
 builder.Services.AddSignalR();
 builder.Services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>

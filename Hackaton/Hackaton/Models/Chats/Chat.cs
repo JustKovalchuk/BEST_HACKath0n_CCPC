@@ -2,7 +2,7 @@
 using Hackaton.Models.User;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hackaton.Models 
+namespace Hackaton.Models.Chats 
 {
     public class Chat
     {
