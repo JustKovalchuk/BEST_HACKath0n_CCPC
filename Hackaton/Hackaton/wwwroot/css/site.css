@@ -7,18 +7,18 @@
     padding-right: 0 !important;
 }
 nav{
-position: sticky !important;
-top:0 !important;
-text-align: center;
-z-index: 100;
-
-   
+    position: sticky !important;
+    top:0 !important;
+    text-align: center;
+    z-index: 100;
 }
-.some{
-    width:100% !important;
+.some {
+    width: 100% !important;
     max-width: 100% !important;
-    margin:0px !important;
+    margin: 0px !important;
     padding: 0px !important;
+    border-bottom: 1px solid black;
+    text-align: center;
 }
 @media(min-width:982px){
     .navbar-expand-lg .navbar-collapse{
@@ -397,6 +397,8 @@ z-index: 100;
 }
 .footer{
     display: flex;
+    position: absolute;
+    bottom: 0;
     justify-content: space-around;
     height: 220px;
     background: rgb(255, 255, 255);
