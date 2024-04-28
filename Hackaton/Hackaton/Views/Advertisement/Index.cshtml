@@ -1,0 +1,35 @@
+﻿@using Hackaton.Models.Advertisement
+@model List<Hackaton.Models.Advertisement.AdvertisementData>
+
+<h1>Список оголошень</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Номер телефону</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var advertisement in Model)
+        {
+            <tr>
+                <td>@advertisement.Name</td>
+                <td>@advertisement.Description</td>
+                <td>@advertisement.PhoneNumber</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Advertisement", new { id = advertisement.Id })" class="btn btn-primary">Редагувати</a>
+                    <a href="@Url.Action("Details", "Advertisement", new { id = advertisement.Id })" class="btn btn-info">Деталі</a>
+                    @using (Html.BeginForm("Delete", "Advertisement", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@advertisement.Id" />
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

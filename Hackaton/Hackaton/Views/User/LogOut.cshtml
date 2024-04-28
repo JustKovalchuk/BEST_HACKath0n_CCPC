@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Log out";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h1>LogOut Successfull!</h1>
+    </div>
+}
+

@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="~/Hackaton.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <script>
+        let x = document.cookie;
+        console.log(x);
+        // var role = document.querySelector('#role');
+
+        // if (role.getAttribute('value') == 'Edit') {
+        //     role.style.display = 'none';
+        // }
+    </script>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -25,10 +34,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("LogIn", "User")" class="btn btn-primary">LogIn</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("SignUp", "User")" class="btn btn-primary">SignUp</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("LogOut", "User")" class="btn btn-primary">LogOut</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Create", "Advertisement")" class="btn btn-primary">Add advertisement </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Index", "Advertisement")" class="btn btn-primary">Advertisement </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
