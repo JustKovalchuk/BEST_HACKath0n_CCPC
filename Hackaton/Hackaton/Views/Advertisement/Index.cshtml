@@ -43,7 +43,7 @@
                     <div class="col-md-4">
                         <div class="advertisement">
                             <p>@advertisement.Name</p>
-                            <p>@advertisement.Description</p>
+                            <p id="description">@advertisement.Description</p>
                             <div class="author-info">
                                 <p class="author">Номер телефону: @advertisement.PhoneNumber</p>
                             </div>
@@ -62,33 +62,35 @@
                 }
             </div>
         </div>
-        <div class="container">
-            <div class="row">
-                @foreach (var advertisement in Model)
-                {
-                    <div class="col-md-4">
-                        <div class="advertisement">
-                            <p>@advertisement.Name</p>
-                            <p>@advertisement.Description</p>
-                            <div class="author-info">
-                                <p class="author">Номер телефону: @advertisement.PhoneNumber</p>
-                            </div>
-                        </div>
-                        <div class="button-container">
-                            <a class="btn" href="@Url.Action("Details", "Advertisement", new { id = advertisement.Id })" class="btn btn-info">Деталі</a>
-                            <a class="btn" href="@Url.Action("Edit", "Advertisement", new { id = advertisement.Id })" class="btn btn-primary">Редагувати</a>
-                            @using (Html.BeginForm("Delete", "Advertisement", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@advertisement.Id" />
-                                <button type="submit" class="btn">Видалити</button>
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
+        
     </main>
+    <script>
+        function truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...';
+            }
+            return text;
+        }
+        var textElement = document.getElementById("description");
+        var originalText = textElement.textContent;
+        var maxLength = 15;
+        var truncatedText = truncateText(originalText, maxLength);
+        document.getElementById("description").innerText = truncatedText;
+    </script>
+
+    <script>
+        function truncateText(text, maxLength) {
+            if (text.length > maxLength) {
+                return text.slice(0, maxLength) + '...';
+            }
+            return text;
+        }
+        var textElement = document.getElementById("content");
+        var originalText = textElement.textContent;
+        var maxLength = 18;
+        var truncatedText = truncateText(originalText, maxLength);
+        document.getElementById("content").innerText = truncatedText;
+    </script>
 @*     <table class="table">
         <thead>
             <tr>
