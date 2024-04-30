@@ -1,0 +1,71 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.col-12,.row>*{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+nav{
+    position: sticky !important;
+    top:0 !important;
+    text-align: center;
+    z-index: 100;
+}
+
+.nav-item{
+    margin-inline: 45px;
+}
+
+.some{
+    width:100% !important;
+    max-width: 100% !important;
+    margin:0px;
+    padding: 0px !important;
+    border-bottom: 1px solid black;
+}
+@media(min-width:982px){
+    .navbar-expand-lg .navbar-collapse{
+        justify-content: center;
+    }
+}
+@media(min-width:1220px){
+    .img_block{
+            background-size: 100%;
+    }
+}
+
+.advertisement{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .author-avatar {
+    width: 40px; /* Розмір фото автора */
+    height: 40px; /* Розмір фото автора */
+    border-radius: 50%; /* Заокруглені кути для кращого вигляду */
+    margin-right: 10px; /* Відступ між фото і текстом */
+  }
+
+  .button-container .btn {
+    background-color: black;
+    color: white;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.button-container .btn:hover {
+    background-color: rgb(73, 73, 73);
+}

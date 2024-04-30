@@ -1,0 +1,109 @@
+body{
+    height: 100%;
+}
+
+.nav-item{
+    margin-inline: 45px;
+}
+
+.logo{
+  display: block;
+  max-width: 100%; /* Забезпечуємо максимальну ширину для великих екранів */
+  height: auto;
+}
+
+.some{
+    width:100% !important;
+    max-width: 100% !important;
+    margin:0px;
+    padding: 0px !important;
+}
+@media(min-width:982px){
+    .navbar-expand-lg .navbar-collapse{
+        justify-content: center;
+    }
+}
+@media(min-width:1220px){
+    .img_block{
+            background-size: 100%;
+
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper{
+        width: 100%
+    }
+  }
+
+.main_element{
+    justify-content: center;
+}
+.img-main{
+    background-image: url("logo.png");
+    background-position: center;
+    background-size: 40%;
+}
+
+.advertisement {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}
+  
+.advertisement h2 {
+    margin-top: 0;
+}
+  
+.button-container .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.author {
+    margin-top: 10px;
+}
+
+.button-container .btn:hover {
+    background-color: lightgrey;
+}
+
+
+.advertisement::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-left: 55px solid transparent;
+    border-top: 55px solid #f5d75f; /* Колір трикутника */
+  }
+
+  .author-info {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid black;
+  }
+  
+  .author-avatar {
+    width: 40px; /* Розмір фото автора */
+    height: 40px; /* Розмір фото автора */
+    border-radius: 50%; /* Заокруглені кути для кращого вигляду */
+    margin-right: 10px; /* Відступ між фото і текстом */
+  }
+
+  .page-link{
+    color: #000;
+  }
+
+  .page-link:hover{
+    background-color: lightgrey;
+    color: black;
+  }
